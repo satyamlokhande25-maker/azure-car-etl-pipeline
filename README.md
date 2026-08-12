@@ -3,6 +3,8 @@
 ## Overview
 Automated ETL data pipeline built using Azure Data Factory, Databricks (PySpark), and Azure Key Vault to ingest raw car market data, perform data transformation, and store clean business metrics into Gold Delta Lake.
 
+<img width="421" height="223" alt="image" src="https://github.com/user-attachments/assets/3ad05cdb-f6bc-44b4-9350-4f3b6f6a6cc5" />
+
 ## Architecture & Data Flow
 1. **Source / Bronze Layer**: ADLS Gen2 (Raw CSV Ingestion).
 2. **Ingestion & In-Memory Data Flow**: ADF Data Flow cleans schema, trims spaces, handles typecasting, and exports Parquet data.
