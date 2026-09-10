@@ -1,24 +1,71 @@
-# End-to-End Azure Car Data Engineering Pipeline
+# Azure Car Data Engineering Pipeline
 
-## Overview
-Automated ETL data pipeline built using Azure Data Factory, Databricks (PySpark), and Azure Key Vault to ingest raw car market data, perform data transformation, and store clean business metrics into Gold Delta Lake.
+An end-to-end cloud data engineering pipeline for ingesting raw car-market data, applying transformation and business logic, and producing curated Gold-layer Delta data using Azure services.
 
-<img width="421" height="223" alt="image" src="https://github.com/user-attachments/assets/3ad05cdb-f6bc-44b4-9350-4f3b6f6a6cc5" />
+## Architecture
 
-## Architecture & Data Flow
-1. **Source / Bronze Layer**: ADLS Gen2 (Raw CSV Ingestion).
-2. **Ingestion & In-Memory Data Flow**: ADF Data Flow cleans schema, trims spaces, handles typecasting, and exports Parquet data.
-3. **Silver Layer**: ADLS Gen2 (Parquet Data Storage).
-4. **Gold Layer (Databricks + PySpark)**: Reads Silver Parquet files via Secure PAT Token authentication using Azure Key Vault, applies SQL/Spark aggregations, and writes back in Delta format.
+```text
+ADLS Gen2 — Bronze / Raw CSV
+            ↓
+Azure Data Factory
+Schema cleanup • trimming • type casting
+            ↓
+ADLS Gen2 — Silver / Parquet
+            ↓
+Azure Databricks + PySpark
+Business transformations & aggregations
+            ↓
+Delta Lake — Gold / Curated Metrics
+```
 
-## Tech Stack
-* **Orchestration**: Azure Data Factory (ADF)
-* **Compute / Processing**: Azure Databricks (PySpark, Delta Lake)
-* **Storage**: Azure Data Lake Storage Gen2 (ADLS Gen2)
-* **Security**: Azure Key Vault (RBAC Managed Access, Secret Storage)
+## Technology Stack
 
-## Setup Instructions
-1. Import ADF ARM Templates located under `adf/`.
-2. Configure Azure Key Vault linked service `ls_KeyVault` with secret `Databricks-PAT-Token`.
-3. Import the Python notebook `NB_Cars_Business_Logic.py` in Azure Databricks.
-4. Execute the pipeline from Data Factory.
+- **Orchestration:** Azure Data Factory
+- **Processing:** Azure Databricks, PySpark
+- **Storage:** Azure Data Lake Storage Gen2
+- **Table Format:** Delta Lake
+- **Security:** Azure Key Vault / RBAC
+
+## Key Engineering Concepts
+
+- Medallion-style Bronze/Silver/Gold architecture
+- Cloud-based ETL orchestration
+- Schema and data-type standardization
+- PySpark transformations and aggregations
+- Secret management through Azure Key Vault
+- Curated Delta Lake outputs for analytics
+
+## Repository Structure
+
+```text
+adf/                         # Azure Data Factory templates
+NB_Cars_Business_Logic.py    # Databricks/PySpark business logic
+README.md                    # Project documentation
+```
+
+## Deployment / Setup
+
+1. Import the ADF ARM templates from `adf/`.
+2. Configure the Key Vault linked service.
+3. Store the Databricks credential/token as a Key Vault secret.
+4. Import `NB_Cars_Business_Logic.py` into Databricks.
+5. Configure linked services, datasets, and parameters for your environment.
+6. Execute and monitor the pipeline from Azure Data Factory.
+
+## Security
+
+Secrets should remain in Azure Key Vault and should never be hardcoded in notebooks, pipeline definitions, or Git history. Prefer managed identities/RBAC where supported by the deployment architecture.
+
+## Future Enhancements
+
+- Add automated data-quality gates
+- Add incremental ingestion and watermarking
+- Add CI/CD for ADF and Databricks artifacts
+- Add pipeline observability and alerting
+- Add schema-drift handling
+- Add automated testing for PySpark transformations
+
+## Author
+
+**Satyam Lokhande**  
+Azure Data Engineering • PySpark • ADF • Databricks • ADLS • Delta Lake
